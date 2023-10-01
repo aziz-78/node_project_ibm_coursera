@@ -34,7 +34,7 @@ public_users.post("/register", (req,res) => {
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
   //Write your code here
-  res.send(JSON.stringify(books,null,4));
+  res.json({'books':books});
 });
 
 // Get book details based on ISBN
@@ -51,14 +51,14 @@ public_users.get('/author/:author',function (req, res) {
         const book = Object.entries(values);
         for(let i = 0; i < book.length ; i++){
             if(book[i][0] == 'author' && book[i][1] == req.params.author){
-                mylist.push(books[key]);
+                mylist.push({isbn:key,title:book[1][1],reviews:book[2][1]});
             }
         }
     }
     if(mylist.length == 0){
         return res.status(300).json({message: "No books available."});
     }
-    res.send(mylist);
+    res.json({"booksbyauthor":mylist});
 });
 
 // Get all books based on title
@@ -69,14 +69,14 @@ public_users.get('/title/:title',function (req, res) {
       const book = Object.entries(values);
       for(let i = 0; i < book.length ; i++){
           if(book[i][0] == 'title' && book[i][1] == req.params.title){
-              mylist.push(books[key]);
+            mylist.push({isbn:key,author:book[0][1],reviews:book[2][1]});
           }
       }
   }
   if(mylist.length == 0){
       return res.status(300).json({message: "Book not found."});
   }
-  res.send(mylist);
+  res.json({"booksbytitle":mylist});
 });
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
